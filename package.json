@@ -1,7 +1,8 @@
 {
   "name": "react-native-thumbnail-preview",
   "title": "React Native Thumbnail Preview",
-  "version": "0.0.1",
+  "description": "Thumbnail preview for video progress bar",
+  "version": "0.1.0",
   "main": "index.js",
   "homepage": "https://github.com/wrathyz/react-native-thumbnail-preview",
   "bugs": {
@@ -18,12 +19,9 @@
     "thumbnail-preview",
     "preview"
   ],
-  "author": {
-    "name": "Wrathyz"
-  },
+  "author": "Wrathyz",
   "license": "MIT",
   "licenseFilename": "LICENSE",
-  "readmeFilename": "README.md",
   "peerDependencies": {
     "react": ">=16.13.1",
     "react-native": ">=0.63.3"
