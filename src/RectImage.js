@@ -73,7 +73,6 @@ class RectImage extends Component<RectImageProps> {
       const urlData = this._getUrlData(url);
       const cacheImage = Cache.getImage(urlData?.imageUrl);
 
-      console.log('rect image', cacheImage);
       if (!!cacheImage?.path) {
         const imagePath = !!cacheImage?.path
           ? (Platform.OS === 'android' ? 'file://' : '') + cacheImage.path

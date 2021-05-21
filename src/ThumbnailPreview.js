@@ -16,10 +16,11 @@ export type ThumbnailPreviewProps = {
   baseUrl?: string,
   baseMaxWidth?: number,
   baseMaxHeight?: number,
-  children?: ReactNode,
 };
 
-const ThumbnailPreview = (props: ThumbnailPreviewProps) => {
+const ThumbnailPreview = (
+  props: ThumbnailPreviewProps & {children?: ReactNode},
+) => {
   const [vttData, setVttData] = useState([]);
 
   useEffect(() => {
@@ -36,10 +37,7 @@ const ThumbnailPreview = (props: ThumbnailPreviewProps) => {
     }
   }, [props.vttUrl]);
 
-  const resource = Vtt.getResourcePreview(
-    props?.currentSecond,
-    vttData,
-  );
+  const resource = Vtt.getResourcePreview(props?.currentSecond, vttData);
   const url = !!props?.baseUrl
     ? props?.baseUrl + resource?.source?.uri
     : resource?.source?.uri;

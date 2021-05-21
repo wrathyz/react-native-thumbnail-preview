@@ -22,7 +22,6 @@ const ThumbnailPreviewConfig = {
         imageUrls.push(baseUrl + content[0]);
       }
     });
-    console.log(imageUrls);
 
     if (imageUrls.length === 0) return false;
 
@@ -31,22 +30,10 @@ const ThumbnailPreviewConfig = {
     );
 
     imageRes?.forEach((v, i) => {
-      console.log('config cache', imageUrls[i], v.width, v.height);
       Cache.storeImage(imageUrls[i], v.width, v.height);
     });
 
     return true;
-    // let ImageSize.getSize(urlData?.imageUrl || '')
-    //       .then(async ({width, height}) => {
-    //         Cache.storeImage(urlData?.imageUrl, width, height);
-    //         if (this.isMount) {
-    //           this._setImageResource(url, width, height, {
-    //             imagePath: urlData?.imageUrl,
-    //             isLoadImage: false,
-    //             isImageOk: true,
-    //           });
-    //         }
-    //       })
   },
   removeCacheImage: () => {
     Cache.clearImage();

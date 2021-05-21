@@ -27,7 +27,7 @@ const App = () => {
     // caching image before display when seek (require RNFetchBlob)
     ThumbnailPreviewConfig.preFetchVttImage(vttUrl, baseUrl + '/');
     return () => {
-      // clear cache vtt file and image
+      // clear cache image
       ThumbnailPreviewConfig.removeCacheImage();
     };
   }, []);
