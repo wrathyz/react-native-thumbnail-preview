@@ -1,4 +1,8 @@
-# react-native-thumbnail-preview
+# React Native Thumbnail Preview
+
+<img src="./preview.gif" width="200px">
+
+---
 
 ## Installation
 
