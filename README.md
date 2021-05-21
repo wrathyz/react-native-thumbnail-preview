@@ -1,5 +1,9 @@
 # React Native Thumbnail Preview
 
+[![npm version](https://badge.fury.io/js/react-native-thumbnail-preview.svg)](https://badge.fury.io/js/react-native-thumbnail-preview)
+
+Thumbnail preview for video progress bar
+
 <img src="./preview.gif" width="200px">
 
 ---
@@ -7,8 +11,8 @@
 ## Installation
 
 1. Run `$ npm install react-native-thumbnail-preview --save`
-2. Require [react-native-image-size](https://github.com/eXist-FraGGer/react-native-image-size) to get orifinal image size.
-3. Optional [rn-fetch-blob](https://github.com/joltup/rn-fetch-blob) to caching image for improve load image only first time. (recommended)
+2. Require [react-native-image-size@1.1.3](https://github.com/eXist-FraGGer/react-native-image-size/tree/v.1.1.3) to get orifinal image size.
+3. Optional [rn-fetch-blob@0.12.0](https://github.com/joltup/rn-fetch-blob/tree/v0.12.0) to caching image for improve load image only first time. (recommended)
 
 ## VTT
 
