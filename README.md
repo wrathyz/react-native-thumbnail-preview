@@ -8,7 +8,7 @@ Thumbnail preview for video progress bar
 - Use only thumbnail preview and make your own progress bar
 - Use progress bar and thumbnail preview
 
-<img src="./preview.gif" width="200px">
+<img src="https://github.com/wrathyz/react-native-thumbnail-preview/blob/main/preview.gif" width="200px">
 
 ---
 
