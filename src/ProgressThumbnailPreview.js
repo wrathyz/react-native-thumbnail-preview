@@ -18,6 +18,8 @@ type ProgressThumbnailPreviewProps = {
   duration: number,
   /** currentTime in second */
   currentTime: number,
+  /** show/hide progress bar */
+  progressbarVisible?: boolean,
   /** default 20 */
   thumbSize?: number,
   /** default 50 */
@@ -48,10 +50,12 @@ const ProgressThumbnailPreview = (props: ProgressThumbnailPreviewProps) => {
   const [widthContainer, setWidthContainer] = useState(0);
   const [holding, setHolding] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
+  const [showProgressbar, setShowProgressbar] = useState(false);
   const refThumb = useRef(new Animated.Value(-thumbTouchArea));
   const refPreviewPos = useRef(new Animated.Value(-thumbTouchArea));
   const refPreviewOpacity = useRef(new Animated.Value(0));
   const refPanResponsder = useRef(PanResponder.create({}));
+  const refProgressbarOpacity = useRef(new Animated.Value(0));
 
   useEffect(() => {
     if (!holding) {
@@ -67,6 +71,11 @@ const ProgressThumbnailPreview = (props: ProgressThumbnailPreviewProps) => {
     if (holding) _showPreview();
     else _hidePreview();
   }, [holding, showPreview]);
+
+  useEffect(() => {
+    if (!!props.progressbarVisible) _showProgressbar();
+    else _hideProgressbar();
+  }, [props.progressbarVisible]);
 
   useEffect(() => {
     refPanResponsder.current = PanResponder.create({
@@ -200,6 +209,25 @@ const ProgressThumbnailPreview = (props: ProgressThumbnailPreviewProps) => {
       useNativeDriver: true,
     }).start(() => setShowPreview(false));
   };
+
+  const _showProgressbar = () => {
+    Animated.timing(refProgressbarOpacity.current, {
+      toValue: 1,
+      duration: 200,
+      easing: Easing.quad,
+      useNativeDriver: true,
+    }).start(() => setShowProgressbar(true));
+  };
+
+  const _hideProgressbar = () => {
+    Animated.timing(refProgressbarOpacity.current, {
+      toValue: 0,
+      duration: 200,
+      easing: Easing.quad,
+      useNativeDriver: true,
+    }).start(() => setShowProgressbar(false));
+  };
+
   const _onLayoutTrackbar = (e: LayoutChangeEvent) => {
     setWidthTrackbar(e.nativeEvent.layout.width);
   };
@@ -213,13 +241,8 @@ const ProgressThumbnailPreview = (props: ProgressThumbnailPreviewProps) => {
   };
 
   const _renderThumbnailPreview = (seekTime: number) => {
-    const {
-      baseMaxHeight,
-      baseMaxWidth,
-      vttUrl,
-      baseUrl,
-      renderChild,
-    } = props.thumbnailPreview;
+    const {baseMaxHeight, baseMaxWidth, vttUrl, baseUrl, renderChild} =
+      props.thumbnailPreview;
     return (
       <ThumbnailPreview
         vttUrl={vttUrl}
@@ -237,7 +260,12 @@ const ProgressThumbnailPreview = (props: ProgressThumbnailPreviewProps) => {
   };
 
   return (
-    <View onLayout={_onLayoutContainer}>
+    <Animated.View
+      pointerEvents={showProgressbar ? 'auto' : 'none'}
+      style={{
+        opacity: refProgressbarOpacity.current,
+      }}
+      onLayout={_onLayoutContainer}>
       {!!props?.thumbnailPreview && showPreview && (
         <Animated.View
           pointerEvents="none"
@@ -308,7 +336,7 @@ const ProgressThumbnailPreview = (props: ProgressThumbnailPreviewProps) => {
           />
         </Animated.View>
       </View>
-    </View>
+    </Animated.View>
   );
 };
 
