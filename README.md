@@ -4,6 +4,10 @@
 
 Thumbnail preview for video progress bar
 
+- Support Android and iOS
+- Use only thumbnail preview and make your own progress bar
+- Use progress bar and thumbnail preview
+
 <img src="./preview.gif" width="200px">
 
 ---
@@ -77,6 +81,7 @@ progress bar with thumbnail preview while seeking
 | style                        | ViewStyle                                     | false    | be carefull about padding, margin     |
 | duration                     | number                                        | true     | video's duration (second)             |
 | currentTime                  | number                                        | true     | display currentTime in progress bar   |
+| progressbarVisible           | boolean                                       | false    | show/hide progress bar animated       |
 | thumbSize                    | number                                        | false    | default: 20                           |
 | thumbTouchSize               | number                                        | false    | default: 50                           |
 | trackHeight                  | number                                        | false    | default: 10                           |
