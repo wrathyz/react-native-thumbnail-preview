@@ -16,7 +16,7 @@ const ThumbnailPreviewConfig = {
     }
 
     const imageUrls: string[] = [];
-    vttRes?.forEach((v) => {
+    vttRes?.forEach(v => {
       const content = v.content.split('#xywh=');
       if (!imageUrls.includes(baseUrl + content[0])) {
         imageUrls.push(baseUrl + content[0]);
@@ -26,7 +26,7 @@ const ThumbnailPreviewConfig = {
     if (imageUrls.length === 0) return false;
 
     const imageRes = await Promise.all(
-      imageUrls.map((v) => ImageSize.getSize(v)),
+      imageUrls.map(v => ImageSize.getSize(v)),
     );
 
     imageRes?.forEach((v, i) => {

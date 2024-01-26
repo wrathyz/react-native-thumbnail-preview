@@ -6,29 +6,29 @@ import {RectImage} from './RectImage';
 
 export type ThumbnailPreviewProps = {
   /** url vtt of video */
-  vttUrl: string,
+  vttUrl: string;
   /** currentTime to display thumbnail */
-  currentSecond: number,
+  currentSecond: number;
   /**
    * if url image in vtt file has only path like this "1.png",
    * you can set baseUrl here, it will be baseUrl + "1.png"
    * */
-  baseUrl?: string,
-  baseMaxWidth?: number,
-  baseMaxHeight?: number,
+  baseUrl?: string;
+  baseMaxWidth?: number;
+  baseMaxHeight?: number;
 };
 
 const ThumbnailPreview = (
   props: ThumbnailPreviewProps & {children?: ReactNode},
 ) => {
-  const [vttData, setVttData] = useState([]);
+  const [vttData, setVttData] = useState<VttType[]>([]);
 
   useEffect(() => {
     const res = Cache.getVtt(props.vttUrl);
     if (!!res?.length) {
       setVttData(res);
     } else {
-      Vtt.fetchVttData(props.vttUrl).then((res) => {
+      Vtt.fetchVttData(props.vttUrl).then(res => {
         if (!!res?.length) {
           setVttData(res);
           Cache.storeVtt(props.vttUrl, res);

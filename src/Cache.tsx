@@ -1,10 +1,10 @@
 import {VttType} from './Vtt';
 
 type CacheImageVttData = {
-  uri: string,
-  path?: string,
-  width: number,
-  height: number,
+  uri: string;
+  path?: string;
+  width: number;
+  height: number;
 };
 
 class CacheStatic {

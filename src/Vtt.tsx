@@ -1,16 +1,16 @@
 export type VttType = {
-  id: string,
-  start: number,
-  end: number,
-  content: string,
+  id: string;
+  start: number;
+  end: number;
+  content: string;
 };
 
 const Vtt = {
   fetchVttData: (urlFile: string): Promise<VttType[]> => {
     return new Promise((resolve, reject) => {
       fetch(urlFile)
-        .then((res) => res.text())
-        .then((res) => {
+        .then(res => res.text())
+        .then(res => {
           let json = Vtt.vttStrToVttObj(res);
           if (!!json) resolve(json);
           else reject();
@@ -50,11 +50,11 @@ const Vtt = {
      * ---------------------------------------
      */
     try {
-      let linesArr = [];
+      let linesArr: string[] = [];
       linesArr = rawText
         .split('\n')
-        .map((v) => v.trim()) // remove space each of line
-        .filter((v) => !!v); // filter not space
+        .map(v => v.trim()) // remove space each of line
+        .filter(v => !!v); // filter not space
 
       // remove header 'WEBVTT'
       if (linesArr[0] == 'WEBVTT') linesArr.shift();
@@ -95,7 +95,7 @@ const Vtt = {
         const imageAndPosition: string[] = v.content.split('#xywh=');
         const xywh: number[] = imageAndPosition[1]
           .split(',')
-          .map((v) => Number(v));
+          .map(v => Number(v));
         const width = xywh[2];
         const height = xywh[3];
         const x = ~~(xywh[0] / width);
