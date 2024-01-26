@@ -1,41 +1,62 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {
-  StyleSheet,
-  View,
-  PanResponder,
   Animated,
-  StyleProp,
-  ViewStyle,
+  ColorValue,
   Easing,
   LayoutChangeEvent,
+  PanResponder,
+  StyleSheet,
+  View,
 } from 'react-native';
 import PreviewDuration from './PreviewDuration';
 import {ThumbnailPreview, ThumbnailPreviewProps} from './ThumbnailPreview';
 
 type ProgressThumbnailPreviewProps = {
-  style?: StyleProp<ViewStyle>,
+  style?: {
+    backgroundColor?: ColorValue;
+    borderRadius?: number;
+    padding?: number;
+    paddingTop?: number;
+    paddingLeft?: number;
+    paddingRight?: number;
+    paddingBottom?: number;
+    paddingStart?: number;
+    paddingEnd?: number;
+    paddingVertical?: number;
+    paddingHorizontal?: number;
+    marginHorizontal?: number;
+    margin?: number;
+    marginTop?: number;
+    marginLeft?: number;
+    marginRight?: number;
+    marginBottom?: number;
+    marginStart?: number;
+    marginEnd?: number;
+    marginVertical?: number;
+  };
   /** duration in second */
-  duration: number,
+  duration: number;
   /** currentTime in second */
-  currentTime: number,
+  currentTime: number;
   /** show/hide progress bar */
-  progressbarVisible?: boolean,
+  progressbarVisible?: boolean;
   /** default 20 */
-  thumbSize?: number,
+  thumbSize?: number;
   /** default 50 */
-  thumbTouchSize?: number,
+  thumbTouchSize?: number;
   /** default 10 */
-  trackHeight?: number,
-  trackColor?: string,
-  trackRadius?: number,
-  trackFillColor?: string,
-  thumbColor?: string,
-  thumbTouchColor?: string,
-  onSeekStart?: (timeSecond: number) => void,
-  onSeekEnd?: (timeSecond: number) => void,
-  thumbnailPreview: ThumbnailPreviewProps & {
-    renderChild?: (e: {seekTime: number}) => React.ReactElement,
-  },
+  trackHeight?: number;
+  trackColor?: string;
+  trackRadius?: number;
+  trackFillColor?: string;
+  thumbColor?: string;
+  thumbTouchColor?: string;
+  onSeekStart?: (timeSecond: number) => void;
+  onSeekEnd?: (timeSecond: number) => void;
+  thumbnailPreview: Omit<ThumbnailPreviewProps, 'currentSecond'> &
+    Partial<ThumbnailPreviewProps> & {
+      renderChild?: (e: {seekTime: number}) => React.ReactElement;
+    };
 };
 
 const ProgressThumbnailPreview = (props: ProgressThumbnailPreviewProps) => {
@@ -44,7 +65,7 @@ const ProgressThumbnailPreview = (props: ProgressThumbnailPreviewProps) => {
   const thumbTouchSize = props.thumbTouchSize || 50;
   const thumbTouchArea = (thumbTouchSize - thumbSize) / 2;
 
-  const [seekingTime, setseekingTime] = useState(0);
+  const [seekingTime, setSeekingTime] = useState(0);
   const [widthTrackbar, setWidthTrackbar] = useState(0);
   const [widthTrackerbarContainer, setWidthTrackerbarContainer] = useState(0);
   const [widthContainer, setWidthContainer] = useState(0);
@@ -125,7 +146,7 @@ const ProgressThumbnailPreview = (props: ProgressThumbnailPreviewProps) => {
         ) {
           refPreviewPos?.current?.setValue(previewPos);
         }
-        setseekingTime(_calcDurationFromProgressPos(touchPos, props.duration));
+        setSeekingTime(_calcDurationFromProgressPos(touchPos, props.duration));
       },
       onPanResponderRelease: (_, gestureState) => {
         props?.onSeekEnd?.(

@@ -18,16 +18,17 @@ const DefaultProps = {
 };
 
 type Position = {
-  x: number,
-  y: number,
+  x: number;
+  y: number;
 };
 
 type RectImageProps = {
-  style?: StyleProp<ViewStyle>,
-  baseMaxWidth?: number,
-  baseMaxHeight?: number,
-  tiledDisplay: Position | number,
-  source: {uri: string},
+  style?: StyleProp<ViewStyle>;
+  baseMaxWidth?: number;
+  baseMaxHeight?: number;
+  tiledDisplay: Position | number;
+  source: {uri: string};
+  children?: React.ReactNode | null;
 };
 
 class RectImage extends Component<RectImageProps> {
@@ -191,7 +192,7 @@ class RectImage extends Component<RectImageProps> {
   _getUrlData = (url: string) => {
     try {
       const sourceAndxywh = url.split('#xywh=');
-      const xywh = sourceAndxywh[1].split(',').map((v) => Number(v));
+      const xywh = sourceAndxywh[1].split(',').map(v => Number(v));
 
       return {
         // full url
