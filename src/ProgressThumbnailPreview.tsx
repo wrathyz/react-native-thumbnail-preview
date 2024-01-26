@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {
   Animated,
   ColorValue,
@@ -77,6 +77,21 @@ const ProgressThumbnailPreview = (props: ProgressThumbnailPreviewProps) => {
   const refPreviewOpacity = useRef(new Animated.Value(0));
   const refPanResponsder = useRef(PanResponder.create({}));
   const refProgressbarOpacity = useRef(new Animated.Value(0));
+  const offsetTrack = useMemo(() => {
+    const style = props.style;
+    let offset = 0;
+
+    offset +=
+      style?.marginHorizontal ||
+      Math.max(style?.marginLeft || 0, style?.marginStart || 0) ||
+      0;
+    offset +=
+      style?.paddingHorizontal ||
+      Math.max(style?.paddingLeft || 0, style?.paddingStart || 0) ||
+      0;
+
+    return offset;
+  }, [props.style]);
 
   useEffect(() => {
     if (!holding) {
@@ -120,12 +135,13 @@ const ProgressThumbnailPreview = (props: ProgressThumbnailPreviewProps) => {
               : previewPos,
           );
         }
-        props?.onSeekStart?.(
-          _calcDurationFromProgressPos(
-            gestureState.x0 + gestureState.dx,
-            props.duration,
-          ),
+
+        const duration = _calcDurationFromProgressPos(
+          gestureState.x0 + gestureState.dx,
+          props.duration,
         );
+        setSeekingTime(duration);
+        props?.onSeekStart?.(duration);
       },
       onPanResponderMove: (_, gestureState) => {
         const {touchPos, seekerPos, previewPos} = _calcSeekAndPreviewPos(
@@ -172,11 +188,12 @@ const ProgressThumbnailPreview = (props: ProgressThumbnailPreviewProps) => {
     refPreviewPos?.current,
     thumbSize,
     thumbTouchSize,
+    offsetTrack,
   ]);
 
   const _calcDurationFromProgressPos = (touchPos: number, duration: number) => {
     const _seekingTime = ~~(
-      (touchPos / (widthTrackbar - thumbSize / 2)) *
+      ((touchPos - offsetTrack) / (widthTrackbar - thumbSize / 2)) *
       duration
     );
 
@@ -191,7 +208,7 @@ const ProgressThumbnailPreview = (props: ProgressThumbnailPreviewProps) => {
   };
 
   const _calcSeekAndPreviewPos = (x: number, dx: number) => {
-    const touchPos = x + dx;
+    const touchPos = x + dx - offsetTrack;
     const seekerPos =
       touchPos -
       thumbTouchSize / 2 -
@@ -301,61 +318,63 @@ const ProgressThumbnailPreview = (props: ProgressThumbnailPreviewProps) => {
           {_renderThumbnailPreview(seekingTime)}
         </Animated.View>
       )}
-      <View
-        style={StyleSheet.compose(props?.style || {}, {})}
-        onLayout={_onLayoutTrackbarContainer}
-        {...(refPanResponsder.current?.panHandlers || {})}>
+      <View style={StyleSheet.compose(props?.style || {}, {})}>
         <View
-          style={{
-            width: '100%',
-            overflow: 'hidden',
-            flexDirection: 'row',
-            borderRadius: (props.trackRadius || trackHeight) / 2,
-            height: trackHeight,
-            backgroundColor: props.trackColor || '#ddd',
-            transform: [
-              {
-                translateY: thumbTouchSize / 2,
-              },
-            ],
-          }}
-          onLayout={_onLayoutTrackbar}>
-          <Animated.View
-            style={{
-              height: '100%',
-              flex: props.currentTime / props.duration,
-              backgroundColor: props.trackFillColor || '#555',
-            }}
-          />
-        </View>
-        <Animated.View
-          style={{
-            backgroundColor: holding
-              ? props.thumbTouchColor || '#ffffff7f'
-              : 'transparent',
-            width: thumbTouchSize,
-            height: thumbTouchSize,
-            borderRadius: thumbTouchSize / 2,
-            justifyContent: 'center',
-            alignItems: 'center',
-            transform: [
-              {
-                translateX: refThumb.current,
-              },
-              {
-                translateY: -trackHeight / 2,
-              },
-            ],
-          }}>
+          style={{width: '100%'}}
+          onLayout={_onLayoutTrackbarContainer}
+          {...(refPanResponsder.current?.panHandlers || {})}>
           <View
             style={{
-              width: thumbSize,
-              height: thumbSize,
-              borderRadius: thumbSize / 2,
-              backgroundColor: props.thumbColor || '#ffffff',
+              width: '100%',
+              overflow: 'hidden',
+              flexDirection: 'row',
+              borderRadius: (props.trackRadius || trackHeight) / 2,
+              height: trackHeight,
+              backgroundColor: props.trackColor || '#ddd',
+              transform: [
+                {
+                  translateY: thumbTouchSize / 2,
+                },
+              ],
             }}
-          />
-        </Animated.View>
+            onLayout={_onLayoutTrackbar}>
+            <Animated.View
+              style={{
+                height: '100%',
+                flex: props.currentTime / props.duration,
+                backgroundColor: props.trackFillColor || '#555',
+              }}
+            />
+          </View>
+          <Animated.View
+            style={{
+              backgroundColor: holding
+                ? props.thumbTouchColor || '#ffffff7f'
+                : 'transparent',
+              width: thumbTouchSize,
+              height: thumbTouchSize,
+              borderRadius: thumbTouchSize / 2,
+              justifyContent: 'center',
+              alignItems: 'center',
+              transform: [
+                {
+                  translateX: refThumb.current,
+                },
+                {
+                  translateY: -trackHeight / 2,
+                },
+              ],
+            }}>
+            <View
+              style={{
+                width: thumbSize,
+                height: thumbSize,
+                borderRadius: thumbSize / 2,
+                backgroundColor: props.thumbColor || '#ffffff',
+              }}
+            />
+          </Animated.View>
+        </View>
       </View>
     </Animated.View>
   );
