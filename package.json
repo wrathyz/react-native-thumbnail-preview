@@ -3,7 +3,7 @@
   "title": "React Native Thumbnail Preview",
   "description": "Thumbnail preview for video progress bar",
   "version": "0.3.1",
-  "main": "index.js",
+  "main": "index.tsx",
   "homepage": "https://github.com/wrathyz/react-native-thumbnail-preview",
   "bugs": {
     "url": "https://github.com/wrathyz/react-native-thumbnail-preview/issues"
