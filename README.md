@@ -15,7 +15,7 @@ Thumbnail preview for video progress bar
 ## Installation
 
 1. Run `$ npm install react-native-thumbnail-preview --save`
-2. Require [react-native-image-size@1.1.3](https://github.com/eXist-FraGGer/react-native-image-size/tree/v.1.1.3) to get orifinal image size.
+2. Require [react-native-image-size@1.1.3](https://github.com/eXist-FraGGer/react-native-image-size/tree/v.1.1.3) to get original image size.
 3. Optional [rn-fetch-blob@0.12.0](https://github.com/joltup/rn-fetch-blob/tree/v0.12.0) to caching image for improve load image only first time. (recommended)
 
 ## VTT
