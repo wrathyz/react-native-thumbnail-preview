@@ -1,17 +1,16 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {
+  Dimensions,
   SafeAreaView,
   StyleSheet,
-  View,
-  Dimensions,
   TouchableOpacity,
+  View,
 } from 'react-native';
-import RNFetchBlob from 'rn-fetch-blob';
 import {
   ProgressThumbnailPreview,
-  ThumbnailPreview,
   ThumbnailPreviewConfig,
 } from 'react-native-thumbnail-preview';
+import RNFetchBlob from 'rn-fetch-blob';
 
 const App = () => {
   const window = Dimensions.get('window');
@@ -22,7 +21,7 @@ const App = () => {
     'https://stdlwcdn.lwcdn.com/i/8fdb4e20-8ebb-4590-8844-dae39680d837/160p.vtt';
   const [currentTime, setCurrentTime] = useState(0);
   const [control, setControl] = useState(false);
-  const timeCtrl = useRef();
+  const timeCtrl = useRef<any>();
 
   // for simulate video player is playing
   useInterval(() => {
@@ -40,9 +39,9 @@ const App = () => {
     };
   }, []);
 
-  const toggleControl = (visivle) => {
+  const toggleControl = (visible: boolean) => {
     clearTimeout(timeCtrl.current);
-    if (visivle) {
+    if (visible) {
       setControl(false);
     } else {
       setControl(true);
@@ -67,7 +66,6 @@ const App = () => {
             progressbarVisible={control}
             style={{
               backgroundColor: '#eeeeeeaf',
-              justifyContent: 'center',
               borderRadius: 8,
               paddingHorizontal: 8,
               marginHorizontal: 8,
@@ -80,17 +78,16 @@ const App = () => {
             thumbTouchColor="#5500007f"
             thumbSize={10}
             thumbTouchSize={30}
-            baseMaxWidthThumbnailPreview={160}
             duration={duration}
             currentTime={currentTime}
             onSeekStart={() => {
               clearTimeout(timeCtrl.current);
               console.log('onSeekStart');
             }}
-            onSeekEnd={(time) => {
+            onSeekEnd={time => {
               console.log(time);
               setCurrentTime(time);
-              toggleControl();
+              toggleControl(control);
             }}
             thumbnailPreview={{
               vttUrl: vttUrl,
@@ -104,8 +101,8 @@ const App = () => {
   );
 };
 
-const useInterval = (callback, delay) => {
-  const savedCallback = useRef();
+const useInterval = (callback: () => void, delay: number) => {
+  const savedCallback = useRef<() => void>();
 
   useEffect(() => {
     savedCallback.current = callback;
@@ -113,7 +110,7 @@ const useInterval = (callback, delay) => {
 
   useEffect(() => {
     let id = setInterval(() => {
-      savedCallback.current();
+      savedCallback.current?.();
     }, delay);
     return () => clearInterval(id);
   }, [delay]);
