@@ -89,38 +89,72 @@ const Vtt = {
       return [];
     }
   },
+  getPosSzie: (vtt: VttType) => {
+    const imageAndPosition: string[] = vtt.content.split('#xywh=');
+    const xywh: number[] = imageAndPosition[1].split(',').map(v => Number(v));
+
+    return {
+      width: xywh[2],
+      height: xywh[3],
+      x: xywh[0],
+      y: xywh[1],
+    };
+  },
   getResourcePreview: (currentTime: number, previewData: VttType[]) => {
     try {
-      const xyConvert = (v: VttType) => {
-        const imageAndPosition: string[] = v.content.split('#xywh=');
-        const xywh: number[] = imageAndPosition[1]
-          .split(',')
-          .map(v => Number(v));
-        const width = xywh[2];
-        const height = xywh[3];
-        const x = ~~(xywh[0] / width);
-        const y = ~~(xywh[1] / height);
-        return {x, y};
-      };
-
       for (let v of previewData) {
         if (~~currentTime >= v.start && ~~currentTime < v.end) {
+          const ps = Vtt.getPosSzie(v);
           return {
             source: {uri: v.content},
-            tiledDisplay: xyConvert(v),
+            tiledDisplay: {
+              x: ~~(ps.x / ps.width),
+              y: ~~(ps.y / ps.height),
+            },
           };
         }
       }
 
       if (currentTime === previewData?.length - 1) {
+        const ps = Vtt.getPosSzie(previewData[currentTime]);
         return {
           source: {uri: previewData[currentTime].content},
-          tiledDisplay: xyConvert(previewData[currentTime]),
+          tiledDisplay: {
+            x: ~~(ps.x / ps.width),
+            y: ~~(ps.y / ps.height),
+          },
         };
       }
     } catch {}
 
     return null;
+  },
+  getImageSize: (
+    vttData: VttType[],
+  ): {width: number; height: number} | null => {
+    let maxX = 0;
+    let maxY = 0;
+    let wTiled = 0;
+    let hTiled = 0;
+
+    if (vttData.length == 0) return null;
+
+    vttData.forEach((v, i) => {
+      const ps = Vtt.getPosSzie(v);
+      if (ps.x > maxX) {
+        maxX = ps.x;
+        wTiled = ps.width;
+      }
+      if (ps.y > maxY) {
+        maxY = ps.y;
+        hTiled = ps.height;
+      }
+    });
+
+    return {
+      width: maxX + wTiled,
+      height: maxY + hTiled,
+    };
   },
 };
 
