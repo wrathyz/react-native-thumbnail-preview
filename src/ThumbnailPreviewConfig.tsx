@@ -1,4 +1,3 @@
-import ImageSize from 'react-native-image-size';
 import {Cache} from './Cache';
 import {Vtt} from './Vtt';
 
@@ -15,6 +14,9 @@ const ThumbnailPreviewConfig = {
       }
     }
 
+    const size = Vtt.getImageSize(vttRes);
+    if (!size) return false;
+
     const imageUrls: string[] = [];
     vttRes?.forEach(v => {
       const content = v.content.split('#xywh=');
@@ -25,12 +27,8 @@ const ThumbnailPreviewConfig = {
 
     if (imageUrls.length === 0) return false;
 
-    const imageRes = await Promise.all(
-      imageUrls.map(v => ImageSize.getSize(v)),
-    );
-
-    imageRes?.forEach((v, i) => {
-      Cache.storeImage(imageUrls[i], v.width, v.height);
+    imageUrls?.forEach((v, i) => {
+      Cache.storeImage(imageUrls[i], size.width, size.height);
     });
 
     return true;

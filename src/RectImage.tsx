@@ -1,14 +1,13 @@
 import React, {Component} from 'react';
 import {
-  View,
   ImageBackground,
-  StyleProp,
-  ViewStyle,
   ImageBackgroundProps,
   Platform,
+  StyleProp,
   StyleSheet,
+  View,
+  ViewStyle,
 } from 'react-native';
-import ImageSize from 'react-native-image-size';
 import {Cache} from './Cache';
 
 const DefaultProps = {
@@ -28,6 +27,8 @@ type RectImageProps = {
   baseMaxHeight?: number;
   tiledDisplay: Position | number;
   source: {uri: string};
+  imageWidth: number;
+  imageHeight: number;
   children?: React.ReactNode | null;
 };
 
@@ -37,8 +38,6 @@ class RectImage extends Component<RectImageProps> {
     imagePath: '',
     isLoadImage: true,
     isImageOk: false,
-    imageWidth: 1,
-    imageHeight: 1,
     tileCol: 1,
     tileRow: 1,
     tileWidth: 1,
@@ -84,25 +83,23 @@ class RectImage extends Component<RectImageProps> {
           isImageOk: true,
         });
       } else {
-        ImageSize.getSize(urlData?.imageUrl || '')
-          .then(async ({width, height}) => {
-            Cache.storeImage(urlData?.imageUrl, width, height);
-            if (this.isMount) {
-              this._setImageResource(url, width, height, {
-                imagePath: urlData?.imageUrl,
-                isLoadImage: false,
-                isImageOk: true,
-              });
-            }
-          })
-          .catch(
-            () =>
-              this.isMount &&
-              this.setState({
-                isImageOk: false,
-                isLoadImage: false,
-              }),
+        Cache.storeImage(
+          urlData?.imageUrl,
+          this.props.imageWidth,
+          this.props.imageHeight,
+        );
+        if (this.isMount) {
+          this._setImageResource(
+            url,
+            this.props.imageWidth,
+            this.props.imageHeight,
+            {
+              imagePath: urlData?.imageUrl,
+              isLoadImage: false,
+              isImageOk: true,
+            },
           );
+        }
       }
     });
   };
@@ -170,8 +167,8 @@ class RectImage extends Component<RectImageProps> {
   };
 
   _getSizeView = () => {
-    const {source} = this.props;
-    let {tileWidth, tileHeight, imageWidth, imageHeight} = this.state;
+    const {source, imageWidth, imageHeight} = this.props;
+    let {tileWidth, tileHeight} = this.state;
     const urlData = this._getUrlData(source.uri);
 
     const sizeView = this._getSizeViewFromTile(

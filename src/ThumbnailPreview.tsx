@@ -22,16 +22,30 @@ const ThumbnailPreview = (
   props: ThumbnailPreviewProps & {children?: ReactNode},
 ) => {
   const [vttData, setVttData] = useState<VttType[]>([]);
+  const [imgWidth, setImgWidth] = useState<number>(0);
+  const [imgheight, setImgHeight] = useState<number>(0);
 
   useEffect(() => {
     const res = Cache.getVtt(props.vttUrl);
     if (!!res?.length) {
       setVttData(res);
+
+      const size = Vtt.getImageSize(res);
+      if (size) {
+        setImgWidth(size.width);
+        setImgHeight(size.height);
+      }
     } else {
       Vtt.fetchVttData(props.vttUrl).then(res => {
         if (!!res?.length) {
           setVttData(res);
           Cache.storeVtt(props.vttUrl, res);
+
+          const size = Vtt.getImageSize(res);
+          if (size) {
+            setImgWidth(size.width);
+            setImgHeight(size.height);
+          }
         }
       });
     }
@@ -47,7 +61,9 @@ const ThumbnailPreview = (
       source={{uri: url}}
       tiledDisplay={resource.tiledDisplay}
       baseMaxWidth={props?.baseMaxWidth}
-      baseMaxHeight={props?.baseMaxHeight}>
+      baseMaxHeight={props?.baseMaxHeight}
+      imageWidth={imgWidth}
+      imageHeight={imgheight}>
       {props.children}
     </RectImage>
   ) : (
